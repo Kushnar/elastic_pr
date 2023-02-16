@@ -1,0 +1,56 @@
+version: '3.7'
+
+volumes:
+  elasticsearch:
+
+services:
+  elastic:
+    container_name: elastic-cont
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.6.1
+    ports:
+      - "9200:9200"
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - http.cors.enabled=true
+      - http.cors.allow-origin="*"
+    networks:
+      - el-search
+  kibana:
+    container_name: kibana-cont
+    image: docker.elastic.co/kibana/kibana:8.6.1
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elastic-cont:9200
+    networks:
+      - el-search
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elastic
+  back:
+    build:
+      context: ./elastic_back/.
+      dockerfile: Dockerfile
+    networks:
+      - el-search
+    ports:
+      - "8000:8000"
+    depends_on:
+      - elastic
+      - kibana
+  front:
+    build:
+      context: ./elastic_front/.
+      target: 'production-stage'
+    ports:
+      - '8080:80'
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    depends_on:
+      - back
+    networks:
+      - el-search
+networks:
+  el-search:
+    driver: bridge
