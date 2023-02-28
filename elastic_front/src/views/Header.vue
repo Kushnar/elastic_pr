@@ -19,7 +19,7 @@ header {
   width: 100%;
   padding: 1rem 2rem;
   margin: 0 0 1rem 0;
-  border: solid 1px hsla(160, 100%, 37%, 1);
+  /*border: solid 1px #181818;*/
   border-top: none;
   border-radius: 0 0 1rem 1rem;
 }

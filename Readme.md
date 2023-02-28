@@ -28,7 +28,8 @@
 ```
 
 4. Your SPA ready to use at [http://localhost:8080/](http://localhost:8080/) on your device.
-
+Elasticsearch container will have to start after 5-10 seconds, so data couldn't be showed immediately.
+Searching include first name, second name, last name and email adress fields
 ## Using
 - front - [http://localhost:8080/](http://localhost:8080/)
 - back - [http://localhost:8000/](http://localhost:8000/)

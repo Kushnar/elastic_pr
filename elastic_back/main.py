@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 from elastic_transport import ConnectionError, ConnectionTimeout
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, exceptions
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 
@@ -72,7 +72,8 @@ async def create_index():
             print(ex)
         for i in openfile():
             ES.index(index="test-index", document=i)
-        return ES.search(index='test-index')
+        data = ES.search(index='test-index', size=30, sort=[{"customers_id.keyword": {"order": "asc"}}])['hits']['hits']
+        return {'code': 200, 'data': data}
     except ConnectionError:
         print('Connection error')
         return {'error': 'Connection error'}
@@ -85,9 +86,9 @@ async def create_index():
 async def get_table_data():
     try:
         data = ES.search(index='test-index', size=30, sort=[{"customers_id.keyword": {"order": "asc"}}])['hits']['hits']
-        return {'status': 'success', 'data': data} if data else {'status': 'error', 'msg': 'something wrong'}
-    except Exception:
-        return {'error': 'Something wrong'}
+        return {'code': 200, 'data': data} if data else {'code': 400, 'msg': 'data'}
+    except exceptions.NotFoundError:
+        return {'error': 'Index Not Found', 'code': 400}
 
 
 @app.post('/sort-table')
