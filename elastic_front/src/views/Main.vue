@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <button v-on:click="onWriteClick">Записати у таблицю</button>
     <table>
       <thead>
       <tr>
@@ -36,6 +37,11 @@ export default {
     this.loadItems()
   },
   methods: {
+    async onWriteClick(){
+      await axios.get(`${this.$store.getters.getBackendUrl}/create-index`).then(()=>{
+        this.loadItems()
+      })
+    },
     async loadItems() {
       this.items = await axios.get(
           `${this.$store.getters.getBackendUrl}/get-table-data/`,
@@ -74,7 +80,6 @@ export default {
       })
     }
   },
-  components: {ContentSheet}
 }
 </script>
 
