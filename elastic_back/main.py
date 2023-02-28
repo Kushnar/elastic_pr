@@ -113,7 +113,7 @@ async def search(data: SearchData):
             "fields": [
                 "customers_firstname",
                 "customers_secondname",
-                "customers_secondname",
+                "customers_lastname",
                 "customers_email_address",
             ],
             "type": "best_fields",
